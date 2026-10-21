@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#173b3a">
+<title>بوخلي Restaurant | المنيو</title>
+<style>
+:root{--green:#173b3a;--green2:#214846;--orange:#f3a36e;--cream:#fff8ef;--ink:#172b2a;--muted:#687573;--line:#e8e0d5}
+*{box-sizing:border-box} body{margin:0;background:#f3eee6;color:var(--ink);font-family:Arial,"Noto Sans Arabic",sans-serif}
+header{background:var(--green);color:#fff;padding:28px 18px 22px;text-align:center;border-bottom:5px solid var(--orange)}
+.brand{font-size:clamp(28px,7vw,42px);font-weight:800;letter-spacing:.2px;color:#fff3e7}
+.brand-en{font-size:13px;letter-spacing:4px;margin-top:5px;color:#f4c4a2}
+.sub{margin:12px 0 0;color:#f8e8dc;font-size:14px}
+.controls{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:16px auto 0}
+button{border:1px solid #f3c7a7;background:transparent;color:#fff;padding:9px 14px;border-radius:24px;font-weight:700;cursor:pointer}
+button.active{background:var(--orange);border-color:var(--orange);color:#173b3a}
+main{max-width:920px;margin:0 auto;padding:18px 14px 42px}
+.note{text-align:center;color:var(--muted);font-size:13px;margin:0 0 16px}
+nav{display:flex;gap:8px;overflow-x:auto;padding:4px 0 14px;scrollbar-width:thin}
+nav a{white-space:nowrap;text-decoration:none;background:#fff;border:1px solid var(--line);color:var(--green);padding:9px 13px;border-radius:22px;font-size:13px;font-weight:700}
+section{background:var(--cream);border:1px solid var(--line);border-radius:16px;margin:0 0 14px;padding:17px 16px;box-shadow:0 3px 12px #173b3a0a;scroll-margin-top:12px}
+h2{margin:0 0 12px;font-size:20px;color:var(--green);display:flex;align-items:center;gap:9px}
+h2:before{content:"";display:inline-block;width:5px;height:22px;background:var(--orange);border-radius:5px}
+.item{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px dashed #ded5c8;align-items:flex-start}
+.item:last-child{border-bottom:0;padding-bottom:0}.names{min-width:0}.ar{font-weight:700;font-size:15px}.en{font-size:12px;color:var(--muted);margin-top:4px;direction:ltr;text-align:right}
+.price{font-weight:800;color:#a9532b;white-space:nowrap;font-size:14px;padding-top:2px}
+footer{text-align:center;background:var(--green);color:#f8e8dc;padding:20px;font-size:12px} .hidden{display:none}
+body.english{direction:ltr}body.english .en{display:none}body.english .ar{font-weight:700}body.english .item{direction:ltr}body.english h2{direction:ltr}body.english h2:before{order:-1}body.english .price{text-align:right}
+@media(min-width:700px){main{padding-top:24px} .menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.menu-grid section{margin:0}.menu-grid section.wide{grid-column:1/-1}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">بوخلي</div><div class="brand-en">RESTAURANT</div>
+  <p class="sub" data-ar="منيو المطعم" data-en="Restaurant Menu">منيو المطعم</p>
+  <div class="controls">
+    <button id="arBtn" class="active" onclick="setLang('ar')">العربية</button>
+    <button id="enBtn" onclick="setLang('en')">English</button>
+  </div>
+</header>
+<main>
+<p class="note" data-ar="الأسعار بالدينار الكويتي ما لم يُذكر غير ذلك." data-en="Prices are in Kuwaiti dinars unless otherwise noted.">الأسعار بالدينار الكويتي ما لم يُذكر غير ذلك.</p>
+<nav id="nav"></nav>
+<div class="menu-grid" id="menu"></div>
+</main>
+<footer>بوخلي Restaurant · أهلاً وسهلاً بكم</footer>
+<script>
+const sections = [
+{ar:"المشاوي والأطباق الرئيسية",en:"Main Dishes",items:[
+["كباب","Kabab","2.550"],["تاووك","Tawouk","2.550"],["تكة لحم","Meat Tikka","3.250"],["قلوب","Hearts","2.550"],["كبدة","Liver","2.250"],["عرايس","Arayes","2.200"],["عرايس جبن","Cheese Arayes","2.250"],["ريش غنم (4 قطع)","Lamb Chops (4 pieces)","4.250"],["مشاوي مشكلة","Mixed Grill","3.000"],["أجنحة دجاج","Chicken Wings","2.000"],["فروج فحم نصف","Half Charcoal Chicken","1.500"],["فروج فحم كامل","Whole Charcoal Chicken","2.850"],["همسات بوخلي (كبدة غنم) مع بطاطا ومشروب","Hamsat Bokhelli (Lamb Liver) with Fries and Drink","2.500"]
+]},
+{ar:"السندويشات",en:"Sandwiches",items:[
+["ستيك لحم","Meat Steak","1.500"],["توستي بوخلي","Toastie Bokhelli","1.250"],["فاهيتا دجاج","Chicken Fajita","1.300"],["سندويش سجق","Sausage Sandwich","1.200"],["تشيكن فيليه","Chicken Fillet","1.250"],["هوت دوغ","Hotdog Sandwich","1.000"],["إضافة بطاطا ومشروب","Add Fries + Drink","1.000"]
+]},
+{ar:"الشاورما",en:"Shawarmas",items:[
+["شاورما دجاج — وجبة","Chicken Shawarma Meal","2.200"],["شاورما دجاج — صاج","Chicken Shawarma Saj","0.850"],["شاورما دجاج — لبناني","Chicken Shawarma Lebanese","0.750"],["شاورما لحم — وجبة","Meat Shawarma Meal","2.300"],["شاورما لحم — صاج","Meat Shawarma Saj","0.950"],["شاورما لحم — لبناني","Meat Shawarma Lebanese","0.850"],["عربي دجاج","Arabi Chicken","2.200"],["عربي لحم","Arabi Beef","2.300"],["عربي مكس","Arabi Mix","2.300"],["صحن شاورما دجاج","Chicken Shawarma Plate","2.500"],["صحن شاورما لحم","Beef Shawarma Plate","2.750"],["صحن شاورما مكس","Mixed Shawarma Plate","2.750"]
+]},
+{ar:"البرجر والبطاطا",en:"Burgers & Fries",items:[
+["برجر بوخلي","Bokhelli Burger","1.500"],["برجر لحم","Beef Burger","1.250"],["برجر دجاج كرسبي","Crispy Chicken Burger","1.000"],["إضافة لحم أو دجاج","Extra Beef or Chicken","0.400"],["بطاطا مقلية","Fries","0.750"],["بطاطا بوخلي","Bokhelli Fries","1.250"],["إضافة بطاطا ومشروب","Add Fries + Drink","1.000"]
+]},
+{ar:"السلطات",en:"Salads",items:[
+["فتوش","Fattoush","1.250"],["سلطة بوخلي","Bokhelli Salad","1.500"],["تبولة","Tabbouleh","1.250"],["سلطة خضراء","Green Salad","1.250"]
+]},
+{ar:"الشوربات",en:"Soups",items:[["شوربة عدس","Lentil Soup","0.750"],["شوربة دجاج","Chicken Soup","0.850"]]},
+{ar:"المقبلات",en:"Appetizers",items:[
+["حمص","Hummus","1.000"],["حمص بالدجاج","Chicken Hummus","1.850"],["حمص باللحمة","Hummus with Meat","1.950"],["متبل","Moutabbal","1.950"],["محمرة","Muhammara","1.100"],["ورق عنب محشي","Stuffed Grape Leaves","1.600"],["بطاطا حارة","Spicy Potatoes","1.250"],["فطائر سبانخ","Spinach Pastries","1.750"],["كبة مقلية","Fried Kibbeh","2.250"],["لفائف الجبن","Cheese Rolls","1.500"]
+]},
+{ar:"الصلصات والإضافات",en:"Sauces & Extras",items:[
+["صلصة طحينة","Tahini Sauce","0.200"],["صلصة ثوم","Garlic Sauce","0.200"],["صلصة كوكتيل","Cocktail Sauce","0.230"],["صلصة ثوم وأعشاب","Garlic & Herbs Sauce","0.250"],["صلصة بوخلي","Bokhelli Sauce","0.250"],["صلصة بوديتش","Bodeech Sauce","0.350"],["أرز بخاري","Bukhari Rice","0.750"],["يخنة بطاطا","Potato Stew","0.900"],["دقوس","Daqoos","0.450"],["خبز تنور","Tandoor Bread","0.100"]
+]},
+{ar:"العصائر",en:"Juices",items:[
+["عصير تفاح","Apple Juice","1.000"],["عصير برتقال","Orange Juice","1.000"],["عصير برتقال وجزر","Orange & Carrot Juice","1.000"],["عصير ليمون ونعنع","Lemon & Mint Juice","1.000"],["موهيتو باشن فروت وخوخ","Passion Fruit & Peach Mojito","1.500"]
+]},
+{ar:"المشروبات الغازية والمياه",en:"Soft Drinks & Water",items:[
+["سبرايت","Sprite","0.200"],["كوكا كولا","Coca-Cola","0.200"],["كوكا كولا دايت","Diet Coca-Cola","0.200"],["فانتا","Fanta","0.200"],["كينزا كولا","Kinza Cola","0.200"],["كينزا ليمون","Kinza Lemon","0.200"],["مياه أروى 500 مل","Arwa Water 500 ml","0.150"],["مياه سان بنديتو 500 مل","San Benedetto Water 500 ml","0.750"],["مياه صودا فيفر تري 200 مل","Fever-Tree Soda Water 200 ml","0.750"]
+]},
+{ar:"الآيس كريم",en:"Gelato",items:[
+["فانيلا","Vanilla","1.500"],["كاكاو","Cocoa","1.500"],["مانجو","Mango","1.500"],["فستق","Pistachio","1.500"],["آيس كريم مشكل","Gelato Mix","3.000"]
+]},
+{ar:"القهوة والمشروبات الباردة",en:"Cold Coffee",items:[
+["أمريكانو مثلج","Iced Americano","1.000"],["سبانش لاتيه مثلج","Iced Spanish Latte","1.250"],["موكا مثلجة","Iced Mocha","1.250"],["لاتيه مثلج","Iced Latte","1.250"],["وايت موكا مثلجة","Iced White Mocha","1.250"]
+]},
+{ar:"المشروبات الساخنة",en:"Hot Drinks",items:[
+["شاي","Tea","0.250"],["شاي أخضر","Green Tea","0.250"],["شاي كرك","Karak Tea","0.250"],["إسبريسو سنغل","Espresso Single","1.000"],["إسبريسو دبل","Espresso Double","1.250"],["أمريكانو","Americano","1.000"],["سبانش لاتيه","Spanish Latte","1.250"],["فلات وايت","Flat White","1.250"],["قهوة تركية","Turkish Coffee","0.500"],["قهوة فرنسية","French Coffee","0.650"],["كابتشينو","Cappuccino","1.250"],["لاتيه","Latte","1.250"],["موكا","Mocha","1.250"],["وايت موكا","White Mocha","1.250"],["هوت شوكليت","Hot Chocolate","1.000"]
+]}
+];
+let lang='ar';
+function setLang(next){lang=next;document.body.classList.toggle('english',lang==='en');document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.getElementById('arBtn').classList.toggle('active',lang==='ar');document.getElementById('enBtn').classList.toggle('active',lang==='en');document.querySelectorAll('[data-ar]').forEach(el=>el.textContent=el.dataset[lang]);render()}
+function render(){
+ const nav=document.getElementById('nav'), menu=document.getElementById('menu');nav.innerHTML='';menu.innerHTML='';
+ sections.forEach((s,i)=>{
+  const id='section-'+i;
+  const a=document.createElement('a');a.href='#'+id;a.textContent=s[lang];nav.appendChild(a);
+  const sec=document.createElement('section');sec.id=id;if(i===0||i===1)sec.classList.add('wide');
+  const h=document.createElement('h2');h.textContent=s[lang];sec.appendChild(h);
+  s.items.forEach(item=>{const row=document.createElement('div');row.className='item';const names=document.createElement('div');names.className='names';
+   const ar=document.createElement('div');ar.className='ar';ar.textContent=item[lang==='ar'?0:1];
+   const en=document.createElement('div');en.className='en';en.textContent=item[lang==='ar'?1:0];
+   names.append(ar,en);const price=document.createElement('div');price.className='price';price.textContent=item[2]+' KD';row.append(names,price);sec.appendChild(row);
+  });menu.appendChild(sec);
+ });
+}
+render();
+</script>
+</body></html>
